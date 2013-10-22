@@ -1,0 +1,7 @@
+Requires Apache HTTPClient library and Google Gson Library
+
+An attempt at programming with an API, in this case Imgurs API
+
+The final goal is to have a application that mirrors your Pictures folder in Imgur, with a GUI
+
+However theres a long way to go and I dont expect to finish any time soon
