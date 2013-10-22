@@ -1,3 +1,7 @@
+/* Created in an attempt to store json files correctly.
+Will probably be deleted soon
+ */
+
 public class ImageDetails {
 
     String Success;

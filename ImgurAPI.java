@@ -30,6 +30,7 @@ import org.apache.http.protocol.HTTP;
  * Time: 7:28 PM
  * To change this template use File | Settings | File Templates.
  */
+
 public class ImgurAPI {
 
         protected String IMGUR_UPLOAD_TO = "http://api.imgur.com/3/image";
@@ -106,23 +107,21 @@ public class ImgurAPI {
                  catch(Exception e){e.printStackTrace();}
             }
 
-            //from http://usmanali112.blogspot.com/2012/07/java-read-json-files.html
-            public void readJSON(JsonObject jsonObject)
-            {
 
-            }
-
+            //Prompts the user to log into their Imgur account
            public void Authorize(){
 
                try{
 
+                   //Authorize URL
                     String url = "https://api.imgur.com/oauth2/authorize";
 
                     HttpClient client = new DefaultHttpClient();
                     HttpPost post = new HttpPost(url);
 
 
-
+                    //Attempt at adding parameters to a URL, not sure if code is wrong
+                   // or parameter formatting is wrong. Imgur is very picky
                     List<NameValuePair> nvps = new ArrayList<NameValuePair>();
                     nvps.add(new BasicNameValuePair("response_type","code"));
                     nvps.add(new BasicNameValuePair("client-id",IMGUR_CLIENT_ID));
@@ -149,6 +148,7 @@ public class ImgurAPI {
                }catch(Exception e){e.printStackTrace();}
            }
 
+            //Not yet working!
            public void UploadImage(){
                try
                {
@@ -164,7 +164,7 @@ public class ImgurAPI {
                     conn.setDoOutput(true);
                    conn.setRequestProperty("Authorization",IMGUR_CLIENT_ID);
                     OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream());
-                  // conn.setRequestProperty("Authorization",IMGUR_API_KEY);
+
                     wr.write(data);
                     wr.flush();
 

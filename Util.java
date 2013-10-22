@@ -16,6 +16,9 @@ import java.io.*;
  *	   this.name = input.nextLine();
  */
 
+
+/* This class will be expanded later as needed */
+
 public class Util {
     protected static Scanner input;
 

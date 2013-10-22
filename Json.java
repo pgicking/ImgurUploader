@@ -14,48 +14,8 @@ import java.util.Map;
  */
 public class Json {
 
-    public static void ReadJson() {
-        try{
 
-
-
-        JsonReader jsonReader;
-
-        jsonReader = new JsonReader(new FileReader("derp.txt"));
-
-
-        while (jsonReader.hasNext()) {
-            String text = jsonReader.nextName();
-            if (text.equals("data")) {
-                //functioncall
-            }
-        }
-
-        jsonReader.endObject();
-        jsonReader.close();
-
-        }catch(Exception e){e.printStackTrace();}
-    }
-
-    public static void ReadJSON(JsonReader jsonReader){
-        try{
-            jsonReader.beginObject();
-            while(jsonReader.hasNext()){
-                String text = jsonReader.nextName();
-                System.out.println(text);
-                while(jsonReader.hasNext()){
-                    String t = jsonReader.nextName();
-                    if(t.equals("id")){
-                        //blaaaah
-                    }
-                }
-            }
-
-
-        }catch(Exception e){e.printStackTrace();}
-    }
-
-
+    //One of many different attempts at reading Json, not yet working.
     public void MyJson(String JsonString){
 
 

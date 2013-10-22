@@ -14,6 +14,7 @@ import java.util.List;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
+/*This will hold the json response to be used for other means like displaying in a readable format */
 
 public class ImageData {
 
