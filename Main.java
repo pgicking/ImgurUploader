@@ -18,5 +18,6 @@ public class Main {
         //imgur.UploadImage();
         imgur.ImgInfo();
         imgur.Authorize();
+        imgur.GetToken();
     }
 }

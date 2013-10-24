@@ -6,8 +6,7 @@
  * To change this template use File | Settings | File Templates.
  */
 
-import java.util.*;
-import java.io.*;
+import java.util.Scanner;
 
 /* Allows the use of input in place of system.in
  * Example:

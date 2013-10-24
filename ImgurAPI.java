@@ -1,26 +1,22 @@
 import com.sun.org.apache.xml.internal.security.utils.Base64;
+import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
-import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.util.EntityUtils;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URLConnection;
 import java.net.URLEncoder;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-import org.apache.http.message.BasicNameValuePair;
-import org.apache.http.protocol.HTTP;
 
 
 /**
@@ -44,7 +40,7 @@ public class ImgurAPI {
             {
                 String url = "https://api.imgur.com/3/image/pkX3Clm";
 
-                //Fake Test string
+                //Fake Test string, will always return success
                 //String url = "http://api.imgur.com/3/account/imgur/images.xml?_fake_status=200";
 
 
@@ -54,7 +50,7 @@ public class ImgurAPI {
                      HttpGet request = new HttpGet(url);
 
                      // add request header
-                     //Note, imgur is very picky about this, a semi-colon after 'authorization' causes a 403
+                     //Note, imgur is very picky about this, a semi-colon after 'Authorization' causes a 403
                      request.addHeader("Authorization", "Client-ID " + IMGUR_CLIENT_ID);
 
                      HttpResponse response = client.execute(request);
@@ -72,7 +68,7 @@ public class ImgurAPI {
 
                      BufferedReader rd = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
 
-                     //Catch server JSON response
+                     //Catch server JSON response in a string
                      StringBuffer result = new StringBuffer();
                      String line;
                      while ((line = rd.readLine()) != null) {
@@ -108,7 +104,8 @@ public class ImgurAPI {
             }
 
 
-            //Prompts the user to log into their Imgur account
+            //Gives users a link to open in a browser to authorize the application.
+            //Getting the code back has been an issue however
            public void Authorize(){
 
                try{
@@ -116,37 +113,84 @@ public class ImgurAPI {
                    //Authorize URL
                     String url = "https://api.imgur.com/oauth2/authorize";
 
+
                     HttpClient client = new DefaultHttpClient();
-                    HttpPost post = new HttpPost(url);
 
+                    URIBuilder builder = new URIBuilder();
 
-                    //Attempt at adding parameters to a URL, not sure if code is wrong
-                   // or parameter formatting is wrong. Imgur is very picky
-                    List<NameValuePair> nvps = new ArrayList<NameValuePair>();
-                    nvps.add(new BasicNameValuePair("response_type","code"));
-                    nvps.add(new BasicNameValuePair("client-id",IMGUR_CLIENT_ID));
+                    builder.setScheme("https").setHost("api.imgur.com").setPath("/oauth2/authorize")
+                            .setParameter("response_type","code")
+                            .setParameter("client_id",IMGUR_CLIENT_ID);
 
-                    post.setEntity(new UrlEncodedFormEntity(nvps, HTTP.UTF_8));
+                   //build the URL
+                    java.net.URI uri = builder.build();
+                    HttpPost post = new HttpPost(uri);
+
+                   //Send URL to servers
                     HttpResponse response = client.execute(post);
+                   System.out.println(post.getURI());
+
+                   BufferedReader rd = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
+
+                   //Catch server response
+                   StringBuffer result = new StringBuffer();
+                   String line;
+                   while ((line = rd.readLine()) != null) {
+                       result.append(line);
+
+                   }
+
+                   System.out.println(result.toString());
+
+                   post.abort();
+                   HttpEntity entity = response.getEntity();
+                   EntityUtils.consume(entity);
+
+
+               }catch(Exception e){e.printStackTrace();}
+           }
+
+            //Exchanges code from Authorize for an account token
+            public void GetToken(){
+
+                try {
+                    String code = "7cdd2498e4dbe1989fb632fd1893ffbefa041d32";
+
+                    HttpClient client = new DefaultHttpClient();
+
+
+                    URIBuilder uriBuilder = new URIBuilder();
+
+                    uriBuilder.setScheme("https").setHost("api.imgur.com").setPath("/oauth2/token")
+                            .setParameter("client_id",IMGUR_CLIENT_ID)
+                            .setParameter("client_secret",IMGUR_API_KEY)
+                            .setParameter("grant_type","authorization_code")
+                            .setParameter("code", code);
+
+                    URI uri = uriBuilder.build();
+                    HttpPost post = new HttpPost(uri);
+                    HttpResponse response = client.execute(post);
+
+                    System.out.println(post.getURI());
 
                     BufferedReader rd = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
 
-                    //Catch server JSON response
+                    //Catch server response
                     StringBuffer result = new StringBuffer();
                     String line;
                     while ((line = rd.readLine()) != null) {
-                            result.append(line);
+                        result.append(line);
 
                     }
 
                     System.out.println(result.toString());
 
 
+                } catch (Exception e) {e.printStackTrace();}
 
-                   // add header
-               //post.setHeader("Authorization", "Client-ID " + IMGUR_CLIENT_ID);
-               }catch(Exception e){e.printStackTrace();}
-           }
+
+            }
+
 
             //Not yet working!
            public void UploadImage(){
