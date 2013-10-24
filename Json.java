@@ -10,6 +10,7 @@ import java.util.Map;
  * User: peterg
  * Date: 10/10/13
  * Time: 8:35 PM
+ * Copyright (c) Peter Gicking 10/10/13
  * To change this template use File | Settings | File Templates.
  */
 public class Json {

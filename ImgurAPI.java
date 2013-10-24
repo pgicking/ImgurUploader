@@ -24,7 +24,13 @@ import java.net.URLEncoder;
  * User: peterg
  * Date: 10/5/13
  * Time: 7:28 PM
+ * Copyright (c) Peter Gicking 10/5/13
  * To change this template use File | Settings | File Templates.
+ */
+/*
+TODO: Make catching server response its own function. Taking in Httpclient response and returning a string
+TODO: Make GetToken successfully exchange code with a token
+TODO: Figure out how to more eloquently get a authorization code
  */
 
 public class ImgurAPI {
@@ -154,7 +160,7 @@ public class ImgurAPI {
             public void GetToken(){
 
                 try {
-                    String code = "7cdd2498e4dbe1989fb632fd1893ffbefa041d32";
+                    String code = "ebd171bbe84320f73e09d1c4a3ad06d41b646a71";
 
                     HttpClient client = new DefaultHttpClient();
 
@@ -165,7 +171,7 @@ public class ImgurAPI {
                             .setParameter("client_id",IMGUR_CLIENT_ID)
                             .setParameter("client_secret",IMGUR_API_KEY)
                             .setParameter("grant_type","authorization_code")
-                            .setParameter("code", code);
+                            .setParameter("code",code);
 
                     URI uri = uriBuilder.build();
                     HttpPost post = new HttpPost(uri);

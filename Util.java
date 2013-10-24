@@ -3,9 +3,9 @@
  * User: peterg
  * Date: 10/5/13
  * Time: 7:24 PM
+ * Copyright (c) Peter Gicking 10/5/13
  * To change this template use File | Settings | File Templates.
  */
-
 import java.util.Scanner;
 
 /* Allows the use of input in place of system.in
