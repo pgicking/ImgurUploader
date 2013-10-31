@@ -20,9 +20,9 @@ public class Main {
         //TODO make things happen
         ImgurAPI imgur = new ImgurAPI();
 
-        //imgur.UploadImage();
-        imgur.ImgInfo();
-        imgur.Authorize();
-        imgur.GetToken();
+        imgur.UploadImage();
+        //imgur.ImgInfo();
+        //imgur.Authorize();
+        //imgur.GetToken();
     }
 }

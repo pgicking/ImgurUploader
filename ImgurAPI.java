@@ -1,4 +1,3 @@
-import com.sun.org.apache.xml.internal.security.utils.Base64;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -6,17 +5,15 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.util.EntityUtils;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
 import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URLConnection;
-import java.net.URLEncoder;
 
 
 /**
@@ -92,17 +89,13 @@ public class ImgurAPI {
 
 
                      json.MyJson(result.toString());
+
                      Imagedetails.DisplayJSON();
 
-                     //System.out.println("\n" + ImageDetail + "\n");
+
 
                      //Print out server JSON response
                      System.out.println(result.toString());
-
-                     response.getEntity().consumeContent();
-                     rd.close();
-                     request.abort();
-                     client.getConnectionManager().closeExpiredConnections();
 
 
                  }
@@ -124,6 +117,7 @@ public class ImgurAPI {
 
                     URIBuilder builder = new URIBuilder();
 
+                   //set the parameters on the URL
                     builder.setScheme("https").setHost("api.imgur.com").setPath("/oauth2/authorize")
                             .setParameter("response_type","code")
                             .setParameter("client_id",IMGUR_CLIENT_ID);
@@ -200,37 +194,65 @@ public class ImgurAPI {
 
             //Not yet working!
            public void UploadImage(){
-               try
-               {
+               //create needed strings
+               String url = "https://api.imgur.com/3/upload";
 
-                    ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                    String data = URLEncoder.encode("image", "UTF-8") + "=" + URLEncoder.encode(Base64.encode(baos.toByteArray()).toString(), "UTF-8");
-                    data = data + "&" + URLEncoder.encode("key", "UTF-8") + "=" + URLEncoder.encode(IMGUR_API_KEY, "UTF-8");
-                    System.out.println("Connecting...");
+               //Create HTTPClient and post
+               HttpClient client = new DefaultHttpClient();
 
-               // Send data
-                    java.net.URL url = new java.net.URL("https://api.imgur.com/3/image");
-                    URLConnection conn = url.openConnection();
-                    conn.setDoOutput(true);
-                   conn.setRequestProperty("Authorization",IMGUR_CLIENT_ID);
-                    OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream());
 
-                    wr.write(data);
-                    wr.flush();
+               //create base64 image
+               BufferedImage image = null;
+               File pix = new File(testfile);
 
-               // Get the response
-                    BufferedReader rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-                    String line;
+               try {
+                   //read image
+                   image = ImageIO.read(pix);
+                   ByteArrayOutputStream byteArray = new ByteArrayOutputStream();
+                   ImageIO.write(image, "jpg", byteArray);
+                   byte[] byteImage = byteArray.toByteArray();
+                   String dataImage = new org.apache.commons.codec.binary.Base64().encodeAsString(byteImage);
+                   //String dataImage = URLEncoder.encode("image", "UTF-8") + "=" + URLEncoder.encode(org.apache.commons.codec.binary.Base64.encodeBase64String(byteArray.toByteArray()).toString(), "UTF-8");
+                   //dataImage += "&" + URLEncoder.encode("key", "UTF-8") + "=" + URLEncoder.encode(IMGUR_CLIENT_ID, "UTF-8");
 
-                    while ((line = rd.readLine()) != null) {
-                        //Logger.info(line);
-                    }
 
-                    wr.close();
-                    rd.close();
+
+                   //add image
+                   URIBuilder uriBuilder = new URIBuilder();
+
+                   uriBuilder.setScheme("https").setHost("api.imgur.com").setPath("/upload")
+                           .setParameter("image", dataImage)
+                           .setParameter("title", "Gickling")
+                           .setParameter("description","Testing imgur uploading");
+
+                   URI uri = uriBuilder.build();
+
+                   HttpPost post = new HttpPost(uri);
+
+                   System.out.println(post.getURI());
+
+                   //add header
+                   post.addHeader("Authorization", "Client-ID " + IMGUR_CLIENT_ID);
+
+
+                   //execute
+                   HttpResponse response = client.execute(post);
+
+                   BufferedReader rd = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
+
+                   //Catch server response
+                   StringBuffer result = new StringBuffer();
+                   String line;
+                   while ((line = rd.readLine()) != null) {
+                       result.append(line);
+
+                   }
+
+                   System.out.print(result);
+
+
                }
-               catch(Exception e){e.printStackTrace();}
-
+               catch (Exception e){e.printStackTrace();}
                }
 
 
