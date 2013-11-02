@@ -1,10 +1,13 @@
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 
 import javax.imageio.ImageIO;
@@ -14,6 +17,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.InputStreamReader;
 import java.net.URI;
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -191,14 +196,14 @@ public class ImgurAPI {
 
             }
 
-
-            //Not yet working!
+            //Uploads the testfile anonymously only atm
            public void UploadImage(){
                //create needed strings
                String url = "https://api.imgur.com/3/upload";
 
                //Create HTTPClient and post
                HttpClient client = new DefaultHttpClient();
+               HttpPost post = new HttpPost(url);
 
 
                //create base64 image
@@ -212,22 +217,11 @@ public class ImgurAPI {
                    ImageIO.write(image, "jpg", byteArray);
                    byte[] byteImage = byteArray.toByteArray();
                    String dataImage = new org.apache.commons.codec.binary.Base64().encodeAsString(byteImage);
-                   //String dataImage = URLEncoder.encode("image", "UTF-8") + "=" + URLEncoder.encode(org.apache.commons.codec.binary.Base64.encodeBase64String(byteArray.toByteArray()).toString(), "UTF-8");
-                   //dataImage += "&" + URLEncoder.encode("key", "UTF-8") + "=" + URLEncoder.encode(IMGUR_CLIENT_ID, "UTF-8");
-
-
 
                    //add image
-                   URIBuilder uriBuilder = new URIBuilder();
-
-                   uriBuilder.setScheme("https").setHost("api.imgur.com").setPath("/upload")
-                           .setParameter("image", dataImage)
-                           .setParameter("title", "Gickling")
-                           .setParameter("description","Testing imgur uploading");
-
-                   URI uri = uriBuilder.build();
-
-                   HttpPost post = new HttpPost(uri);
+                   List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(1);
+                   nameValuePairs.add(new BasicNameValuePair("image", dataImage));
+                   post.setEntity(new UrlEncodedFormEntity(nameValuePairs));
 
                    System.out.println(post.getURI());
 
