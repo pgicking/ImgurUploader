@@ -1,10 +1,3 @@
-import com.google.gson.*;
-import com.google.gson.stream.JsonReader;
-import com.google.*;
-
-import java.io.*;
-import java.util.Map;
-
 /**
  * Created with IntelliJ IDEA.
  * User: peterg
@@ -30,8 +23,8 @@ public class Json {
 
         //System.out.println("\nFrom MyJSON\n" + ImageDetail + "\n");
 
-        JsonObject json = (JsonObject)new JsonParser().parse(JsonString);
-        System.out.println("id=" + json.get("id"));
+        //JsonObject json = (JsonObject)new JsonParser().parse(JsonString);
+        //System.out.println("id=" + json.get("id"));
 
 
 

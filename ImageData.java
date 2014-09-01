@@ -7,13 +7,6 @@
  * Class to hold the json values for an image json response
  */
 
-import java.io.*;
-import java.lang.reflect.Type;
-import java.util.List;
-
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-
 /*This will hold the json response to be used for other means like displaying in a readable format */
 
 public class ImageData {

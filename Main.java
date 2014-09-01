@@ -19,10 +19,11 @@ public class Main {
     {
         //TODO make things happen
         ImgurAPI imgur = new ImgurAPI();
+        String testfile = "E:\\Users\\peterg\\Pictures\\Pictures\\test.jpg";
 
-        imgur.UploadImage();
+        //imgur.UploadImage(testfile);
         //imgur.ImgInfo();
-        //imgur.Authorize();
-        //imgur.GetToken();
+        imgur.Authorize();
+        imgur.GetToken();
     }
 }
