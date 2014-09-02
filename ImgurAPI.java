@@ -12,8 +12,10 @@ import org.apache.http.util.EntityUtils;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
-import java.io.*;
-import java.net.URI;
+import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -28,7 +30,7 @@ import java.util.Scanner;
  * To change this template use File | Settings | File Templates.
  */
 /*
-TODO: Make GetToken successfully exchange pin with a token
+TODO: Catch access and refresh token and do stuff with them
 TODO: Make catching server response its own function. Taking in Httpclient response and returning a string
  */
 
@@ -158,21 +160,21 @@ public class ImgurAPI {
 
             //Exchanges pin from Authorize for an account token
             public void GetToken(){
-
+                String url = "https://api.imgur.com/oauth2/token";
                 try {
                     HttpClient client = new DefaultHttpClient();
 
+                    HttpPost post = new HttpPost(url);
+//                  From https://groups.google.com/forum/?fromgroups#!topic/imgur/1WThSGbG8CM
+                    List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
 
-                    URIBuilder uriBuilder = new URIBuilder();
-                    System.out.println(pin);
-                    uriBuilder.setScheme("https").setHost("api.imgur.com").setPath("/oauth2/token")
-                            .setParameter("client_id",IMGUR_CLIENT_ID)
-                            .setParameter("client_secret",IMGUR_API_KEY)
-                            .setParameter("grant_type","pin")
-                            .setParameter("pin",pin);
+                    nameValuePairs.add(new BasicNameValuePair("client_id", IMGUR_CLIENT_ID));
+                    nameValuePairs.add(new BasicNameValuePair("client_secret", IMGUR_API_KEY));
+                    nameValuePairs.add(new BasicNameValuePair("grant_type", "pin"));
+                    nameValuePairs.add(new BasicNameValuePair("pin", pin));
 
-                    URI uri = uriBuilder.build();
-                    HttpPost post = new HttpPost(uri);
+                    post.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+
                     HttpResponse response = client.execute(post);
 
                     BufferedReader rd = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
@@ -184,7 +186,7 @@ public class ImgurAPI {
 
 
                     if(ResponseCode == (200))
-                        System.out.print(" Success!\n");
+                        System.out.println("Success!");
                     else {
                         System.out.print("Something went wrong.\n");
                         System.out.println("Response Code: " + ResponseCode);
