@@ -35,7 +35,8 @@ TODO: Make catching server response its own function. Taking in Httpclient respo
 public class ImgurAPI {
 
         protected String IMGUR_UPLOAD_TO = "http://api.imgur.com/3/image";
-        protected String IMGUR_API_KEY = "693b7d62220755b2ff6d0c440600fdf867a77ce0";
+//        protected String IMGUR_API_KEY = "693b7d62220755b2ff6d0c440600fdf867a77ce0";
+        protected String IMGUR_API_KEY = "f9a7c2d2d48a0fe1fae941abbe475b7367054d5c";
         protected String IMGUR_CLIENT_ID = "3b837a79bf02e18";
         protected String pin;
 //        String testfile = "E:\\Users\\peterg\\Pictures\\Pictures\\test.jpg";
@@ -82,19 +83,9 @@ public class ImgurAPI {
 
                      }
 
-
                      ImageData image = new ImageData();
-                     Json json = new Json();
-                     ImageDetails Imagedetails = new ImageDetails();
 
                      String ImageDetail = image.toString();
-
-
-
-                     json.MyJson(result.toString());
-
-                     Imagedetails.DisplayJSON();
-
 
 
                      //Print out server JSON response
@@ -144,14 +135,14 @@ public class ImgurAPI {
                        System.err.println(e.getMessage());
                    }
 
-                   //Catch server response
+//                   Catch server response
+//                   Returns the html for the page, keep this commented out
 //                   StringBuffer result = new StringBuffer();
 //                   String line;
 //                   while ((line = rd.readLine()) != null) {
 //                       result.append(line);
 //
 //                   }
-
 //                   System.out.println(result.toString());
 
                    System.out.print("Enter the pin: ");
@@ -165,12 +156,10 @@ public class ImgurAPI {
                }catch(Exception e){e.printStackTrace();}
            }
 
-            //Exchanges code from Authorize for an account token
+            //Exchanges pin from Authorize for an account token
             public void GetToken(){
 
                 try {
-//                    String code = "ebd171bbe84320f73e09d1c4a3ad06d41b646a71";
-
                     HttpClient client = new DefaultHttpClient();
 
 
@@ -186,24 +175,19 @@ public class ImgurAPI {
                     HttpPost post = new HttpPost(uri);
                     HttpResponse response = client.execute(post);
 
-                    System.out.println(post.getURI());
-
                     BufferedReader rd = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
 
 
-                    // add request header
-                    //Note, imgur is very picky about this, a semi-colon after 'Authorization' causes a 403
-
                     //Store response code (200, 403, 404, etc)
                     int ResponseCode = response.getStatusLine().getStatusCode();
-                    System.out.println("\nSending 'GET' request to : " + post);
-                    System.out.println("Response Code: " + ResponseCode);
+                    System.out.println("Sending 'POST' request to : " + post.getURI());
 
 
                     if(ResponseCode == (200))
                         System.out.print(" Success!\n");
                     else {
-                        System.out.print(" Something went wrong.\n");
+                        System.out.print("Something went wrong.\n");
+                        System.out.println("Response Code: " + ResponseCode);
                     }
                     //Catch server response
                     StringBuffer result = new StringBuffer();

@@ -9,6 +9,10 @@
 
 /*This will hold the json response to be used for other means like displaying in a readable format */
 
+/**
+ * Not sure what I was doing here, maybe my past self thought I would
+ * be handle an image as an object, im gonna just keep it for now.
+ */
 public class ImageData {
 
         private String id;

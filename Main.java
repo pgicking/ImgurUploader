@@ -22,7 +22,7 @@ public class Main {
         String testfile = "E:\\Users\\peterg\\Pictures\\Pictures\\test.jpg";
 
         //imgur.UploadImage(testfile);
-        //imgur.ImgInfo();
+        imgur.ImgInfo();
         imgur.Authorize();
         imgur.GetToken();
     }
