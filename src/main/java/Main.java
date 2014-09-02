@@ -17,7 +17,7 @@
 /*
 TODO: Catch access and refresh token and do stuff with them
 TODO: Structure multiple json classes in ways that make sense (child/parent)
-TODO: Make catching server response its own function. Taking in Httpclient response and returning a string
+TODO: Figure out how to get the correct refresh token on startup every time
  */
 
 public class Main {
