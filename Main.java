@@ -12,6 +12,14 @@
  * Copyright (c) Peter Gicking 10/5/13
  * To change this template use File | Settings | File Templates.
  */
+
+
+/*
+TODO: Catch access and refresh token and do stuff with them
+TODO: Structure multiple json classes in ways that make sense (child/parent)
+TODO: Make catching server response its own function. Taking in Httpclient response and returning a string
+ */
+
 public class Main {
 
 
@@ -21,9 +29,13 @@ public class Main {
         ImgurAPI imgur = new ImgurAPI();
         String testfile = "E:\\Users\\peterg\\Pictures\\Pictures\\test.jpg";
 
+        //static file for now
+        String refreshToken = imgur.GetRefreshToken("Swook.txt");
+        if(refreshToken == null){
+            imgur.Authorize();
+            imgur.GetToken();
+        }
         //imgur.UploadImage(testfile);
-        imgur.ImgInfo();
-        imgur.Authorize();
-        imgur.GetToken();
+        //imgur.ImgInfo();
     }
 }

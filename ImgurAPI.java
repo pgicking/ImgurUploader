@@ -12,10 +12,7 @@ import org.apache.http.util.EntityUtils;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
-import java.io.BufferedReader;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -28,10 +25,6 @@ import java.util.Scanner;
  * Time: 7:28 PM
  * Copyright (c) Peter Gicking 10/5/13
  * To change this template use File | Settings | File Templates.
- */
-/*
-TODO: Catch access and refresh token and do stuff with them
-TODO: Make catching server response its own function. Taking in Httpclient response and returning a string
  */
 
 public class ImgurAPI {
@@ -161,6 +154,7 @@ public class ImgurAPI {
             //Exchanges pin from Authorize for an account token
             public void GetToken(){
                 String url = "https://api.imgur.com/oauth2/token";
+                JsonHandler jsonHandler;
                 try {
                     HttpClient client = new DefaultHttpClient();
 
@@ -200,12 +194,48 @@ public class ImgurAPI {
                     }
 
                     System.out.println(result.toString());
-
+                    jsonHandler = new JsonHandler(result.toString());
+                    StoreFreshToken(jsonHandler);
 
                 } catch (Exception e) {e.printStackTrace();}
 
 
             }
+
+
+           public void StoreFreshToken(JsonHandler jsonObject){
+               //TODO: Check for existing filename
+               //TODO: Encode in binary or other non human readable format
+               PrintWriter writer = null;
+               try {
+                   writer = new PrintWriter(jsonObject.GetAccountName() + ".txt", "UTF-8");
+               } catch (FileNotFoundException e) {
+                   e.printStackTrace();
+               } catch (UnsupportedEncodingException e) {
+                   e.printStackTrace();
+               }
+               if (writer != null) {
+                   writer.println(jsonObject.GetRefreshToken());
+                   writer.close();
+               }
+               else{
+                   System.err.println("Error writing Refresh Token");
+                   return;
+               }
+
+           }
+
+           public String GetRefreshToken(String filename){
+               Scanner in = null;
+               try {
+                   in = new Scanner(new FileReader(filename));
+               } catch (FileNotFoundException e) {
+                   //e.printStackTrace();
+                   return null;
+               }
+
+               return in.next();
+           }
 
             //Uploads the testfile anonymously only atm
            public void UploadImage(String filePath){
