@@ -7,7 +7,7 @@ import org.json.JSONObject;
 import java.text.ParseException;
 //http://stackoverflow.com/questions/2591098/how-to-parse-json-in-java
 public class JsonHandler {
-    JSONObject jsonObject;
+    protected JSONObject jsonObject;
 
     public JsonHandler(String Json) throws ParseException {
         this.jsonObject = new JSONObject(Json);
