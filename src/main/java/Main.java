@@ -19,6 +19,7 @@ TODO: Catch access and refresh token and do stuff with them
 TODO: Structure multiple json classes in ways that make sense (child/parent)
 TODO: Figure out how to get the correct refresh token on startup every time
 TODO: Encode Refresh token in binary or some other non human readable format
+TODO: Write tests (junit/hamcrest?)
  */
 
 public class Main {

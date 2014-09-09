@@ -3,7 +3,6 @@ import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.impl.client.DefaultHttpClient;
@@ -13,6 +12,7 @@ import org.apache.http.util.EntityUtils;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.*;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -45,50 +45,18 @@ public class ImgurAPI {
                 //Fake Test string, will always return success
                 //String url = "http://api.imgur.com/3/account/imgur/images.xml?_fake_status=200";
 
+                HTTPHandler httpHandler = new HTTPHandler();
 
-                 try
-                 {
-                     HttpClient client = new DefaultHttpClient();
-                     HttpGet request = new HttpGet(url);
+                JsonImage image = null;
+                try {
+                    image = new JsonImage(httpHandler.doGET(url));
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
 
-                     // add request header
-                     //Note, imgur is very picky about this, a semi-colon after 'Authorization' causes a 403
-                     request.addHeader("Authorization", "Client-ID " + IMGUR_CLIENT_ID);
-
-                     HttpResponse response = client.execute(request);
-
-                     //Store response code (200, 403, 404, etc)
-                     int ResponseCode = response.getStatusLine().getStatusCode();
-                     System.out.println("\nSending 'GET' request to : " + url);
-                     System.out.println("Response Code: " + ResponseCode);
+                System.out.println("Image Title: " + image.GetImageTitle());
 
 
-                     if(ResponseCode == (200))
-                          System.out.print(" Success!\n");
-                     else
-                          System.out.print(" Something went wrong.\n");
-
-                     BufferedReader rd = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
-
-                     //Catch server JSON response in a string
-                     StringBuffer result = new StringBuffer();
-                     String line;
-                     while ((line = rd.readLine()) != null) {
-                         result.append(line);
-
-                     }
-
-                     ImageData image = new ImageData();
-
-                     String ImageDetail = image.toString();
-
-
-                     //Print out server JSON response
-                     System.out.println(result.toString());
-
-
-                 }
-                 catch(Exception e){e.printStackTrace();}
             }
 
 
