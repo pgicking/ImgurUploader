@@ -15,11 +15,11 @@
 
 
 /**
-TODO: Catch access and refresh token and do stuff with them
 TODO: Structure multiple json classes in ways that make sense (child/parent)
 TODO: Figure out how to get the correct refresh token on startup every time
 TODO: Encode Refresh token in binary or some other non human readable format
 TODO: Write tests (junit/hamcrest?)
+TODO: Figure out how to make sure all Operations classes have access to new AccessToken (Super Parent Class constructor?)
  */
 
 public class Main {
@@ -38,5 +38,9 @@ public class Main {
         }
         //imgur.UploadImage(testfile);
         //imgur.ImgInfo();
+        String access_token = imgur.GetNewAccessToken("Swook.txt");
+        AlbumOperations album = new AlbumOperations(access_token);
+        JsonBasic jsonBasic = album.GetAccountAlbumIDs();
+        System.out.println(jsonBasic.GetData());
     }
 }

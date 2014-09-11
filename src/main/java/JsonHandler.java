@@ -25,4 +25,12 @@ public class JsonHandler {
     public String GetAccountName(){
         return jsonObject.getString("account_username");
     }
+
+    public int GetExpiration(){
+        return jsonObject.getInt("expires_in");
+    }
+
+    public String GetTokenType(){
+        return jsonObject.getString("token_type");
+    }
 }

@@ -6,10 +6,15 @@ import java.text.ParseException;
 public class AlbumOperations {
 
     protected String ALBUM_API_URL = "https://api.imgur.com/3/account/me/album/";
-    protected String MULTIPLE_ALBUMS_API_URL = "https://api.imgur.com/3/account/{username}/albums";
+    protected String MULTIPLE_ALBUMS_API_URL = "https://api.imgur.com/3/account/me/albums";
     protected String IMGUR_API_KEY = "f9a7c2d2d48a0fe1fae941abbe475b7367054d5c";
     protected String IMGUR_CLIENT_ID = "3b837a79bf02e18";
     protected HTTPHandler httpHandler = new HTTPHandler();
+    protected String access_Token;
+
+    AlbumOperations(String access_Token){
+        this.access_Token = access_Token;
+    }
 
 
     /**
@@ -20,7 +25,7 @@ public class AlbumOperations {
      */
     public JsonAlbum GetAlbumInfo(String AlbumID) throws ParseException {
         JsonAlbum album = null;
-        album = new JsonAlbum(httpHandler.doGET(ALBUM_API_URL + AlbumID));
+        album = new JsonAlbum(httpHandler.doGET(ALBUM_API_URL + AlbumID, access_Token));
         return album;
 
     }
@@ -32,7 +37,7 @@ public class AlbumOperations {
     public JsonBasic GetAccountAlbumIDs(){
         JsonBasic jsonBasic = null;
         try {
-            jsonBasic = new JsonBasic(httpHandler.doGET(MULTIPLE_ALBUMS_API_URL));
+            jsonBasic = new JsonBasic(httpHandler.doGET(MULTIPLE_ALBUMS_API_URL + "/ids", access_Token));
         } catch (ParseException e) {
             e.printStackTrace();
         }

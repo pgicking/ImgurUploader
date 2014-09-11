@@ -11,9 +11,9 @@ public class JsonBasic extends JsonHandler {
     }
 
     /**
-     * Is null, boolean, or integer value.
-     * If it's a post then this will contain an object with the all generated values, such as an ID.
-     * I decided to return a string since that encompasses ints,nulls or bools
+     * Super generic all encompassing Json object, most json responses will be a subset of
+     * the "data" class. So I just puke it out as a string
+     * because im not sure what else to do with it.
      * @return
      */
     public String GetData(){

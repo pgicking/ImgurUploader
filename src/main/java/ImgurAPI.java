@@ -1,6 +1,7 @@
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
+import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
@@ -49,7 +50,7 @@ public class ImgurAPI {
 
                 JsonImage image = null;
                 try {
-                    image = new JsonImage(httpHandler.doGET(url));
+                    image = new JsonImage(httpHandler.doGET(url, null));
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
@@ -59,6 +60,56 @@ public class ImgurAPI {
 
             }
 
+
+            public String GetNewAccessToken(String Username){
+                String refresh_token = GetRefreshToken(Username);
+
+                JsonHandler jsonHandler = null;
+                String url = "https://api.imgur.com/oauth2/token";
+                HttpClient client = new DefaultHttpClient();
+
+                HttpPost post = new HttpPost(url);
+//                  From https://groups.google.com/forum/?fromgroups#!topic/imgur/1WThSGbG8CM
+                List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
+
+                nameValuePairs.add(new BasicNameValuePair("refresh_token", refresh_token));
+                nameValuePairs.add(new BasicNameValuePair("client_id", IMGUR_CLIENT_ID));
+                nameValuePairs.add(new BasicNameValuePair("client_secret", IMGUR_API_KEY));
+                nameValuePairs.add(new BasicNameValuePair("grant_type", "refresh_token"));
+
+                HttpResponse response = null;
+                try {
+                    post.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+                    response = client.execute(post);
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                } catch (ClientProtocolException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+                BufferedReader rd = null;
+                StringBuffer result = new StringBuffer();
+                try {
+                    rd = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
+                    //Catch server response
+                    String line;
+                    while ((line = rd.readLine()) != null) {
+                        result.append(line);
+
+                    }
+                    System.out.println(result.toString());
+                    jsonHandler = new JsonHandler(result.toString());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+
+
+                return  jsonHandler.GetAccessToken();
+            }
 
             //Gives users a link to open in a browser to authorize the application.
             //Getting the code back has been an issue however

@@ -23,13 +23,19 @@ public class HTTPHandler {
      * @param URL The URL to send a GET request too
      * @return  Returns the json in String form
      */
-    public String doGET(String URL){
+    public String doGET(String URL, String access_Token){
         HttpClient client = new DefaultHttpClient();
         HttpGet request = new HttpGet(URL);
 
         //request header
-        request.addHeader("Authorization", "Client-ID " + IMGUR_CLIENT_ID);
-
+        if(URL.contains("me")){
+            //For requests about authorized account
+            request.addHeader("Authorization", "Bearer " + access_Token);
+        }
+        else {
+            //For anonymous requests
+            request.addHeader("Authorization", "Client-ID " + IMGUR_CLIENT_ID);
+        }
         HttpResponse response = null;
         try {
             response = client.execute(request);
@@ -68,4 +74,7 @@ public class HTTPHandler {
         return String.valueOf(result);
     }
 
+    public String doPOST(){
+        return null;
+    }
 }
